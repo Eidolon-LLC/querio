@@ -2,6 +2,9 @@ import sbt.Keys.{libraryDependencies, scalaSource, _}
 
 // ------------------------------- Main projects -------------------------------
 
+val PublishOwner = "eidolon-llc"
+val PublishRepo = "querio"
+
 val DefaultScalaVersion = "2.12.6"
 
 crossScalaVersions := Seq("2.11.12", "2.12.6")
@@ -23,7 +26,7 @@ val defaultProjectStructure = Seq(
   resourceDirectory in Test := baseDirectory.value / "testData"
 )
 
-val commonSettings = _root_.bintray.BintrayPlugin.bintrayPublishSettings ++ scalaSettings ++ defaultProjectStructure ++ Seq(
+val commonSettings = scalaSettings ++ defaultProjectStructure ++ Seq(
   organization := "com.github.citrum.querio",
   version := "0.7.1",
 
@@ -51,8 +54,10 @@ val commonSettings = _root_.bintray.BintrayPlugin.bintrayPublishSettings ++ scal
   startYear := Some(2015),
   homepage := Some(url("https://github.com/citrum/querio")),
   licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
-  bintrayVcsUrl := Some("https://github.com/citrum/querio"),
-  bintrayOrganization := Some("citrum"),
+  publishTo := Some("GitHub Package Registry" at s"https://maven.pkg.github.com/$PublishOwner/$PublishRepo"),
+  scmInfo := Some(ScmInfo(url(s"https://github.com/$PublishOwner/$PublishRepo"), s"scm:git@github.com:$PublishOwner/$PublishRepo.git")),
+  publishMavenStyle := true,
+
   // No Javadoc
   publishArtifact in(Compile, packageDoc) := false,
   publishArtifact in packageDoc := false,
@@ -64,8 +69,7 @@ val noPublishSettings = Seq(
   Keys.`package` := file(""),
   publishArtifact := false,
   publishLocal := {},
-  publish := {},
-  bintrayUnpublish := {}
+  publish := {}
 )
 
 // ------------------------------- Main project -------------------------------
